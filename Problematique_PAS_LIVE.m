@@ -405,6 +405,15 @@ rlocus(FT(2,1), 'b')
 %% j) Lieu des racines incluant interne
 disp("------------------------J------------------------");
 
+String = "Figure 8 : Rlocus de Gamma/Gamma_d";
+disp(String);
+figure;
+hold on
+temp = tf([Num3(5,:)], [Den3]);
+%temp = feedback(temp, 1);
+rlocus(temp, 'r')
+% Il est possible de voir qu'uniquement les k varient et que les r sont toujours pareille
+
 %% k) Création de la boucle complète
 disp("------------------------K------------------------");
 %On trouver K_p grâce au graphique à la figure 5
@@ -429,7 +438,7 @@ FT_P = K_p*FT_complet;
 FT_P_Fermer = feedback(FT_P, 1);
 
 %On trace le nouveau bode avec le nouveau K_p
-String = "Figure 8 : Nouveau Bode avec K_p = " + string(K_p);
+String = "Figure 9 : Nouveau Bode avec K_p = " + string(K_p);
 disp(String);
 figure;
 margin(FT_P);
@@ -444,11 +453,16 @@ Erreur_Statique = 1/(1+K_origine);
 
 %% m) Calcul des différents compensateurs
 disp("------------------------M------------------------");
+%Avec P
+FT_P = K_p*FT_complet;
+FT_P_Fermer = feedback(FT_P, 1);
 [Y_P, T_P] = step(FT_P_Fermer);
 One_P = ones(length(Y_P),1);
 Erreur_P = One_P - Y_P;
 
 % Graphique des steps
+String = "Figure 10 : Step de compensateur P";
+disp(String);
 figure;
 hold on
 title("P");
@@ -457,25 +471,20 @@ plot(T_P, Erreur_P, 'r');
 plot(T_P, One_P, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
-% step(FT_P_Fermer)
-% legend("P")
 
 %Avec PD
 Num_PD = [K_p K_p];
 Den_PD = [1];
-
 FT_PD = tf([Num_PD],[Den_PD])*FT_complet;
 FT_PD_Fermer = feedback(FT_PD, 1);
-
-% figure
-% rlocus(FT_PD)
-% legend("PD")
 
 [Y_PD, T_PD] = step(FT_PD_Fermer);
 One_PD = ones(length(Y_PD),1);
 Erreur_PD = One_PD - Y_PD;
 
 % Graphique des steps
+String = "Figure 11 : Step de compensateur P";
+disp(String);
 figure;
 hold on
 title("PD");
@@ -484,25 +493,18 @@ plot(T_PD, Erreur_PD, 'r');
 plot(T_PD, One_PD, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
-% step(FT_PD_Fermer)
-% legend("PD")
-
 %Avec PI
 Num_PI = [K_p K_p];
 Den_PI = [1 0];
-
 FT_PI = tf([Num_PI],[Den_PI])*FT_complet;
 FT_PI_Fermer = feedback(FT_PI, 1);
-
-% figure
-% rlocus(FT_PI)
-% legend("PI")
-
 [Y_PI, T_PI] = step(FT_PI_Fermer);
 One_PI = ones(length(Y_PI),1);
 Erreur_PI = One_PI - Y_PI;
 
 % Graphique des steps
+String = "Figure 12 : Step de compensateur P";
+disp(String);
 figure;
 hold on
 title("PI");
@@ -511,25 +513,18 @@ plot(T_PI, Erreur_PI, 'r');
 plot(T_PI, One_PI, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
-% step(FT_PI_Fermer)
-% legend("PI")
-
 %Avec PID
 Num_PID = [K_p K_p K_p];
 Den_PID = [1 0];
-
 FT_PID = tf([Num_PID],[Den_PID])*FT_complet;
 FT_PID_Fermer = feedback(FT_PID, 1);
-
-% figure
-% rlocus(FT_PID)
-% legend("PID")
-
 [Y_PID, T_PID] = step(FT_PID_Fermer);
 One_PID = ones(length(Y_PID),1);
 Erreur_PID = One_PID - Y_PID;
 
 % Graphique des steps
+String = "Figure 13 : Step de compensateur P";
+disp(String);
 figure;
 hold on
 title("PID");
@@ -537,9 +532,6 @@ plot(T_PID, Y_PID, 'b');
 plot(T_PID, Erreur_PID, 'r');
 plot(T_PID, One_PID, 'k');
 legend("Réponse", "Erreur", "\gamma")
-
-% step(FT_PID_Fermer)
-% legend("PID")
 
 % stepinfo(FT_P_Fermer)
 % stepinfo(FT_PD_Fermer)
