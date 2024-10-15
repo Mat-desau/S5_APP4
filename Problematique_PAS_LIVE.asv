@@ -409,11 +409,9 @@ String = "Figure 8 : Rlocus de Gamma/Gamma_d";
 disp(String);
 figure;
 hold on
-temp2 = tf([Num3(5,:)], [Den3])
-rlocus(temp2, 'r')
-figure
-temp = 0.000100 * tf(Num3(5,:), [Den3])
-rlocus(temp, 'b')
+temp = tf([Num3(5,:)], [Den3]);
+%temp = feedback(temp, 1);
+rlocus(temp, 'r')
 % Il est possible de voir qu'uniquement les k varient et que les r sont toujours pareille
 
 %% k) Création de la boucle complète
@@ -447,10 +445,13 @@ margin(FT_P);
 
 %% l) Calcul de l'erreur en régime permanant
 disp("------------------------L------------------------");
-String = "Calcul de l'erreur en régime permanant ";
+%Calcul de l'erreur en régime permanant
+K_Pos = 10^(5.33/20);
+Erreur_Statique = 1/(1+K_Pos);
+String = "K_pos = " + string(K_Pos);
+disp(String);
+String = "Erreur Statique = " + string(Erreur_Statique);
 disp(String)
-K_origine = 10^(5.33/20);
-Erreur_Statique = 1/(1+K_origine);
 
 
 %% m) Calcul des différents compensateurs
@@ -473,7 +474,22 @@ plot(T_P, Erreur_P, 'r');
 plot(T_P, One_P, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
+%Calcul des nouvelle matrices
+[Num_FT_P, Den_FT_P] = tfdata(FT_P_Fermer, 'v'); 
+[A2, B2, C2, D2] = tf2ss(Num_FT_P, Den_FT_P);
+String = "Nouvelles Matrices A2,B2,C2,D2";
+disp(String);
+disp("A2");
+disp(A2);
+disp("B2");
+disp(B2);
+disp("C2");
+disp(C2);
+disp("D2");
+disp(D2);
 
+%% n) Comparaison et discussion des réponses temporels
+disp("------------------------N------------------------");
 %Avec PD
 Num_PD = [K_p K_p];
 Den_PD = [1];
@@ -485,7 +501,7 @@ One_PD = ones(length(Y_PD),1);
 Erreur_PD = One_PD - Y_PD;
 
 % Graphique des steps
-String = "Figure 11 : Step de compensateur P";
+String = "Figure 11 : Step de compensateur PD";
 disp(String);
 figure;
 hold on
@@ -505,7 +521,7 @@ One_PI = ones(length(Y_PI),1);
 Erreur_PI = One_PI - Y_PI;
 
 % Graphique des steps
-String = "Figure 12 : Step de compensateur P";
+String = "Figure 12 : Step de compensateur PI";
 disp(String);
 figure;
 hold on
@@ -515,25 +531,18 @@ plot(T_PI, Erreur_PI, 'r');
 plot(T_PI, One_PI, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
-% step(FT_PI_Fermer)
-% legend("PI")
-
 %Avec PID
 Num_PID = [K_p K_p K_p];
 Den_PID = [1 0];
-
 FT_PID = tf([Num_PID],[Den_PID])*FT_complet;
 FT_PID_Fermer = feedback(FT_PID, 1);
-
-% figure
-% rlocus(FT_PID)
-% legend("PID")
-
 [Y_PID, T_PID] = step(FT_PID_Fermer);
 One_PID = ones(length(Y_PID),1);
 Erreur_PID = One_PID - Y_PID;
 
 % Graphique des steps
+String = "Figure 13 : Step de compensateur PID";
+disp(String);
 figure;
 hold on
 title("PID");
@@ -542,10 +551,18 @@ plot(T_PID, Erreur_PID, 'r');
 plot(T_PID, One_PID, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
-% step(FT_PID_Fermer)
-% legend("PID")
-
 % stepinfo(FT_P_Fermer)
 % stepinfo(FT_PD_Fermer)
 % stepinfo(FT_PI_Fermer)
 % stepinfo(FT_PID_Fermer)
+figure;
+rlocus(FT_P)
+figure
+rlocus(FT_PD)
+figure
+rlocus(FT_PI)
+figure
+rlocus(FT_PID)
+
+[num55, ]
+[r55, p55, k55] = residue(Num1(1,:), Den1);

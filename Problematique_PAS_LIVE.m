@@ -445,10 +445,13 @@ margin(FT_P);
 
 %% l) Calcul de l'erreur en régime permanant
 disp("------------------------L------------------------");
-String = "Calcul de l'erreur en régime permanant ";
+%Calcul de l'erreur en régime permanant
+K_Pos = 10^(5.33/20);
+Erreur_Statique = 1/(1+K_Pos);
+String = "K_pos = " + string(K_Pos);
+disp(String);
+String = "Erreur Statique = " + string(Erreur_Statique);
 disp(String)
-K_origine = 10^(5.33/20);
-Erreur_Statique = 1/(1+K_origine);
 
 
 %% m) Calcul des différents compensateurs
@@ -471,7 +474,22 @@ plot(T_P, Erreur_P, 'r');
 plot(T_P, One_P, 'k');
 legend("Réponse", "Erreur", "\gamma")
 
+%Calcul des nouvelle matrices
+[Num_FT_P, Den_FT_P] = tfdata(FT_P_Fermer, 'v'); 
+[A2, B2, C2, D2] = tf2ss(Num_FT_P, Den_FT_P);
+String = "Nouvelles Matrices A2,B2,C2,D2";
+disp(String);
+disp("A2");
+disp(A2);
+disp("B2");
+disp(B2);
+disp("C2");
+disp(C2);
+disp("D2");
+disp(D2);
 
+%% n) Comparaison et discussion des réponses temporels
+disp("------------------------N------------------------");
 %Avec PD
 Num_PD = [K_p K_p];
 Den_PD = [1];
@@ -483,7 +501,7 @@ One_PD = ones(length(Y_PD),1);
 Erreur_PD = One_PD - Y_PD;
 
 % Graphique des steps
-String = "Figure 11 : Step de compensateur P";
+String = "Figure 11 : Step de compensateur PD";
 disp(String);
 figure;
 hold on
@@ -503,7 +521,7 @@ One_PI = ones(length(Y_PI),1);
 Erreur_PI = One_PI - Y_PI;
 
 % Graphique des steps
-String = "Figure 12 : Step de compensateur P";
+String = "Figure 12 : Step de compensateur PI";
 disp(String);
 figure;
 hold on
@@ -523,7 +541,7 @@ One_PID = ones(length(Y_PID),1);
 Erreur_PID = One_PID - Y_PID;
 
 % Graphique des steps
-String = "Figure 13 : Step de compensateur P";
+String = "Figure 13 : Step de compensateur PID";
 disp(String);
 figure;
 hold on
@@ -537,3 +555,30 @@ legend("Réponse", "Erreur", "\gamma")
 % stepinfo(FT_PD_Fermer)
 % stepinfo(FT_PI_Fermer)
 % stepinfo(FT_PID_Fermer)
+
+
+%% Petite section pour des test et affichage externe
+% figure;
+% rlocus(FT_P)
+% figure
+% rlocus(FT_PD)
+% figure
+% rlocus(FT_PI)
+% figure
+% rlocus(FT_PID)
+% 
+% [num55, den55] = tfdata(FT_P, 'v');
+% [r55, p55, k55] = residue(num55, den55);
+% poids5 = abs(r55)./abs(real(p55))% 3 et 4 de beaucoup
+% 
+% [num65, den65] = tfdata(FT_PD, 'v');
+% [r65, p65, k65] = residue(num65, den65);
+% poids6 = abs(r65)./abs(real(p65))% 3 et 4 de beaucoup
+% 
+% [num75, den75] = tfdata(FT_PI, 'v');
+% [r75, p75, k75] = residue(num75, den75);
+% poids7 = abs(r75)./abs(real(p75))% 3 et 4 de beaucoup
+% 
+% [num85, den85] = tfdata(FT_PID, 'v');
+% [r85, p85, k85] = residue(num85, den85);
+% poids8 = abs(r85)./abs(real(p85))% 3 et 4 de beaucoup
