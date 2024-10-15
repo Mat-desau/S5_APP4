@@ -37,9 +37,9 @@ D = [0 0;
 [Num2, Den2] = ss2tf(A,B,C,D,2);
 
 %5 premières fonctions est l'angle de gouvernail en fonction de [𝑣 𝛼 𝜃 𝑞 𝛾]
-%6 à 10 sont la fraction de poussermax en fonction de [𝑣 𝛼 𝜃 𝑞 𝛾]
+%6 à 10 sont la fraction de pousséemax en fonction de [𝑣 𝛼 𝜃 𝑞 𝛾]
 
-%On calcul le poids des pôles
+%On calcul le residue des fonctions
 [r1, p1, k1] = residue(Num1(1,:), Den1);
 [r2, p2, k2] = residue(Num1(2,:), Den1);
 [r3, p3, k3] = residue(Num1(3,:), Den1);
@@ -267,7 +267,7 @@ step(FT2(2,1));
 %% b) Fonction de transfert à phase non minimale
 %On prends toute les valeurs de l'angle de vol en fonction de l'angle du gouvernail 
 disp("------------------------B------------------------");
-String = "Figure 3 : Pôles et zéros de le V en fonction de A_prop";
+String = "Figure 3 : Pôles et zéros de V en fonction de A_prop";
 disp(String);
 figure;
 pzmap(Num1(5,:), Den1);
@@ -355,7 +355,7 @@ D1 = [0;
 %On trouve la nouvelle fonction de transfert
 [Num3, Den3] = ss2tf(A1,B1,C1,D1);
 
-%V en fonction de fraction de pousser complet
+%V en fonction de fraction de poussée complet
 FT3 = tf(Num3(1,:), Den3);
 
 String = "(2) Calcul des nouvelles matrices A,B,C,D avec le nouveau K_v fonction de transfert = ";
@@ -388,7 +388,7 @@ disp(String)
 disp("------------------------G------------------------");
 
 %% h) Calcul du K_v avec le système réduit
-% On trouve que K_v = 1.3 et non 1.03 quand on mets les deux ensemble
+% On trouve que K_v = 1.3 en ordre 2 et 1.03 en ordre 4
 disp("------------------------H------------------------");
 
 
